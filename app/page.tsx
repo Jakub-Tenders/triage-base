@@ -25,7 +25,11 @@ export default function ChatPage() {
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({
+          messages: [...messages, { role: "user" as const, text: message }].map(
+            (m) => ({ role: m.role, content: m.text }),
+          ),
+        }),
       });
       const data: unknown = await response.json();
 
@@ -70,7 +74,10 @@ export default function ChatPage() {
   return (
     <main className="chat">
       <h1>Support chat</h1>
-      <p>Send a message and get an echo reply.</p>
+      <p>
+        <a href="/triage">Triage</a> · <a href="/smoke">Smoke test</a> ·{" "}
+        <a href="/admin">Admin</a>
+      </p>
       <section
         className="messages"
         role="log"
